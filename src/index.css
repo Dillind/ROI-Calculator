@@ -1,0 +1,19 @@
+/* .app-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items:  center;
+    background-color: rgb(175, 173, 173);
+} */
+
+.input {
+    text-align: center;
+}
+
+.calculate-btn {
+    margin-top: 10px;
+}
+
+.statistics {
+    display: grid;
+}
