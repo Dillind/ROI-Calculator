@@ -44,10 +44,13 @@ function App() {
 
 
   // collect data from selected answers - push to a new collectData array?
-  const formAnswers = useFormAnswers();
-  console.log(formAnswers);
 
+  function collectData() {
+    const formAnswers = useFormAnswers();
+    console.log(formAnswers)
+  }
 
+  console.log(collectData());
 
   return (
     // <div className='app-container'>
@@ -113,7 +116,7 @@ function App() {
                 multiple: false,
                 label: "Please select your region.",
                 choices: [
-                  // depending on region selected, retrieve the internal $ rate for the region
+                  // if (value === region) push internal $ rate for that region into an array?
                   { 
                     label: "Americas",
                     value: "americas",
@@ -157,7 +160,7 @@ function App() {
             // Step 2: What do you want to use Mastt for?
             {
               name: "multiple-choice",
-              id: "gqr1294c",
+              id: "t5fcv35",
               attributes: {
                 required: true,
                 multiple: false,
@@ -182,48 +185,15 @@ function App() {
             // Step 3 - How many projects do you have? - input field.
 
             {
-              name: "long-text",
+              name: "short-text",
               id: "masd24q",
               attributes: {
                 required: true,
-                label: "How many projects do you have?",
-                setMaxCharacters: false, // Default: false
-                maxCharacters: 10,
+                label: "What is the total number of projects you have?",
+                setMaxCharacters: true,
+                maxCharacters: 3,
               }
             },
-
-            // {
-            //   name: "multiple-choice",
-            //   id: "tmdn83q",
-            //   attributes: {
-            //     required: true,
-            //     multiple: false,
-            //     verticalAlign: true,
-            //     label: "How many projects do you have?", // volume
-            //     choices: [
-            //       {
-            //         label: "1 - 5",
-            //         value: "1 - 5"
-            //       },
-            //       {
-            //         label: "6 - 10",
-            //         value: "6 - 10"
-            //       },
-            //       {
-            //         label: "11 - 15",
-            //         value: "11 - 15"
-            //       },
-            //       {
-            //         label: "16 - 19",
-            //         value: "16 - 19"
-            //       },
-            //       {
-            //         label: "20 +",
-            //         value: "20 +"
-            //       }
-            //     ]
-            //   }
-            // },
 
             // Step 4 - Approximately, how much value will be attributed to each project?
             {
@@ -233,19 +203,19 @@ function App() {
                 required: true,
                 multiple: false,
                 verticalAlign: true,
-                label: "What type of value will be attributed to each project?", // value
+                label: "What type of value will be attributed to each project?",
                 choices: [
                   {
-                    label: "$0 - $10,000",
-                    value: "$0 - $10,000"
+                    label: "$0 - $9,999",
+                    value: "$0 - $9,999"
                   },
                   {
-                    label: "$10,001 - $50,000",
-                    value: "$10,001 - $50,000"
+                    label: "$10,000 - $49,999",
+                    value: "$10,000 - $49,999"
                   },
                   {
-                    label: "$50,001 - $99,999",
-                    value: "$50,001 - 99,999"
+                    label: "$50,000 - $99,999",
+                    value: "$50,000 - 99,999"
                   },
                   {
                     label: "$100,000 +",
@@ -259,51 +229,26 @@ function App() {
             // No. of Project Controllers
 
             {
-              name: "multiple-choice",
-              id: "gk579an",
+              name: "short-text",
+              id: "p56t35q",
               attributes: {
                 required: true,
-                multiple: false,
-                verticalAlign: true,
-                label: "How many staff do you currently have employed?",
-                choices: [
-                  {
-                    label: "5-10",
-                    value: "5-10"
-                  },
-                  {
-                    label: "10-20",
-                    value: "10-20"
-                  },
-                  {
-                    label: "30-40",
-                    value: "30-40"
-                  },
-                  {
-                    label: "50-60",
-                    value: "50-60"
-                  },
-                ]
+                label: "How many staff members do you employ?",
+                setMaxCharacters: true,
+                maxCharacters: 5,
               }
             },
 
-
             // No. of Project Managers 
             
-
-
             // // Step 6. Present ROI Data / Pricing
             // {
               
-
-
-
-
-
             // }
           ],
         }}
-        onSubmit={(data, { completeForm, setIsSubmitting, goToBlock, setSubmissionErr }) => {
+        onSubmit={(data, { completeForm, setIsSubmitting, goToBlock, setSubmissionErr},) => {
+          console.log("Submitted!")
           setTimeout(() => {
             setIsSubmitting(false);
             completeForm();
