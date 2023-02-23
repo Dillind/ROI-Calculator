@@ -1,27 +1,47 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Form, useFormAnswers } from "@quillforms/renderer-core";
 import "@quillforms/renderer-core/build-style/style.css";
 import { registerCoreBlocks } from "@quillforms/react-renderer-utils";
 registerCoreBlocks();
 import '../src/index.css'
 
+// Only use hooks at the top level of your React function, otherwise you will run into errors.
 
 function App() {
 
-  // const [modal, setModal] = useState(false)
+  const [showPricing, setShowPricing] = useState(true)
+  const [showData, setShowData] = useState(true)
 
-  // displays the data from the user input
+  function displayPricing() {
+    return (
+      <div>
+        {
+          showPricing ? <h1>PRICING GOES HERE</h1> : null
+        }
+        <button onClick={() => setShowPricing(!showPricing)}>Show Pricing</button>
+      </div>
+    )
+  }
+
+  // displays the data from the user input 
   function displayData() {
     return (
-      <div className='display-data'>
-        <p><b>Selected region:</b> {collectData["region"].value}</p>
-        <p>Role: {collectData["role"].value[0]}</p>
-        <p>What do you want to use Mastt for? {collectData["mastt-reason"].value}</p>
-        <p>How many projects do you have? {collectData["projects"].value}</p>
-        <p>How much value will be assigned to each project? {collectData["project-value"].value[0]}</p>
-        <p>How many staff do you have? {collectData["staff"].value}</p>
+      <div>
+        {
+        showData ? 
+        <div className='display-data'>
+          <p><b>Selected region:</b> {collectData["region"].value}</p>
+          <p>Role: {collectData["role"].value[0]}</p>
+          <p>What do you want to use Mastt for? {collectData["mastt-reason"].value}</p>
+          <p>How many projects do you have? {collectData["projects"].value}</p>
+          <p>How much value will be assigned to each project? {collectData["project-value"].value[0]}</p>
+          <p>How many staff do you have? {collectData["staff"].value}</p>
+        </div>
+        : null 
+        }
+        <button onClick={() => setShowData(!showData)}>Show ROI Data</button>
       </div>
     )
   }
@@ -207,6 +227,7 @@ function App() {
       />
       <div>
         {isInProgress ? "" : displayData()}
+        {isInProgress ? "" : displayPricing()}
       </div>
       </div>
   );
@@ -216,8 +237,6 @@ ReactDOM.render(
 React.createElement(App, {}, null),
 document.getElementById('react-target')
 );
-
-
 
   // const [investment, setInvestment] = useState()
   // const [gross, setGross] = useState()
