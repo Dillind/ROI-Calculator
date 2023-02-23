@@ -11,6 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@quillforms/react-renderer-utils": "^4.1.0",
+    "@quillforms/renderer-core": "^4.1.0",
     "css-loader": "^6.7.3",
     "mui": "^0.0.1",
     "react": "^18.2.0",
