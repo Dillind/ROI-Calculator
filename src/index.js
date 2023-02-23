@@ -11,8 +11,8 @@ import '../src/index.css'
 
 function App() {
 
-  const [showPricing, setShowPricing] = useState(true)
-  const [showData, setShowData] = useState(true)
+  const [showPricing, setShowPricing] = useState(false)
+  const [showData, setShowData] = useState(false)
 
   function displayPricing() {
     return (
@@ -53,6 +53,8 @@ function App() {
 
   const [isInProgress, setIsInProgress] = useState(true)
 
+  // const [showForm, setShowForm] = useState(true)
+
   // stores form data in the collectData state variable.
   function storeData() {
     setCollectData(formAnswers);
@@ -60,11 +62,14 @@ function App() {
   }
 
   return (
-  <div style={{ width: "100%", height: "100vh" }}>
-      <Form
-        formId="1"
-        formObj={{
-          blocks: [
+    <div>
+      {
+        isInProgress ?
+          <div style={{ width: "100%", height: "100vh" }}>
+          <Form
+            formId="1"
+            formObj={{
+            blocks: [
             // Welcome Screen
             {
               name: "welcome-screen",
@@ -224,12 +229,16 @@ function App() {
             setIsInProgress(false)
           }, 500);
         }}
+        
       />
-      <div>
+      </div>
+      : console.log("Error")
+    }
+      <div className='display-container'>
         {isInProgress ? "" : displayData()}
         {isInProgress ? "" : displayPricing()}
       </div>
-      </div>
+    </div>
   );
 }
  
