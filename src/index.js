@@ -7,23 +7,14 @@ import { registerCoreBlocks } from "@quillforms/react-renderer-utils";
 registerCoreBlocks();
 import '../src/index.css'
 
+import Test from '../src/components/Test.js'
+
+import Pricing from '../src/components/Pricing.js' 
 // Only use hooks at the top level of your React function, otherwise you will run into errors.
 
 function App() {
 
-  const [showPricing, setShowPricing] = useState(false)
   const [showData, setShowData] = useState(false)
-
-  function displayPricing() {
-    return (
-      <div>
-        {
-          showPricing ? <h1>PRICING GOES HERE</h1> : null
-        }
-        <button onClick={() => setShowPricing(!showPricing)}>Show Pricing</button>
-      </div>
-    )
-  }
 
   // displays the data from the user input 
   function displayData() {
@@ -232,11 +223,13 @@ function App() {
         
       />
       </div>
-      : console.log("Error")
+      : null
     }
       <div className='display-container'>
         {isInProgress ? "" : displayData()}
-        {isInProgress ? "" : displayPricing()}
+        {/* {isInProgress ? "" : displayPricing()} */}
+        <Pricing/>
+        <Test/>
       </div>
     </div>
   );
