@@ -1,6 +1,4 @@
 import React, { useState } from 'react'
-import { ReactDOM } from 'react-dom'
-
 import { Form, useFormAnswers } from "@quillforms/renderer-core";
 import "@quillforms/renderer-core/build-style/style.css";
 import { registerCoreBlocks } from "@quillforms/react-renderer-utils";
@@ -20,26 +18,28 @@ const [isInProgress, setIsInProgress] = useState(true)
 
 // stores form data in the collectData state variable.
 function storeData() {
-setCollectData(formAnswers);
-console.log(formAnswers)
+    setCollectData(formAnswers);
+    console.log(formAnswers)
 }
 
 // displays the data from the user input 
+// e.g. If 'Americas' is selected, need to be able to store the internal $ rate for PM.
+
 function displayData() {
     return (
         <div>
              { showData ? 
-            <div className='display-data'>
-                <p><b>Selected region:</b> {collectData["region"].value}</p>
-                <p>Role: {collectData["role"].value[0]}</p>
-                <p>What do you want to use Mastt for? {collectData["mastt-reason"].value}</p>
-                <p>How many projects do you have? {collectData["projects"].value}</p>
-                <p>How much value will be assigned to each project? {collectData["project-value"].value[0]}</p>
-                <p>How many staff do you have? {collectData["staff"].value}</p>
-            </div>
-        : null }
-        <button onClick={() => setShowData(!showData)}>Show ROI Data</button>
-    </div>
+                <div className='form-answers'>
+                    <p><b>Selected region:</b> {collectData["region"].value}</p>
+                    <p>Role: {collectData["role"].value[0]}</p>
+                    <p>What do you want to use Mastt for? {collectData["mastt-reason"].value}</p>
+                    <p>How many projects do you have? {collectData["projects"].value}</p>
+                    <p>How much value will be assigned to each project? {collectData["project-value"].value[0]}</p>
+                    <p>How many staff do you have? {collectData["staff"].value}</p>
+                </div>
+            : null }
+            <button onClick={() => setShowData(!showData)}>Populate ROI Data</button>
+        </div>
     )
 }
 
