@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import { useTheme, useMessages } from "@quillforms/renderer-core";
 
 /**

@@ -1,3 +1,8 @@
+body {
+    margin: 0 !important;
+    height: 100%;
+}
+
 /* .app-container {
     display: flex;
     flex-direction: column;
@@ -18,7 +23,7 @@
     display: grid;
 }
 
-.display-data {
+.form-answers {
     display: flex;
     flex-direction: column;
     justify-content: center;
