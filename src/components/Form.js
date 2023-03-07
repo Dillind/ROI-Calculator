@@ -48,6 +48,17 @@ const projectTiersInitialState = [
     {id: "11", range: '100M+', count: 0} 
 ]
 
+const staffRolesInitialState = [
+    {id: "1", role: 'Project Manager', count: 0},
+    {id: "2", role: 'Project Director', count: 0},
+    {id: "3", role: 'Program Manager', count: 0},
+    {id: "4", role: 'Portfolio Manager', count: 0},
+    {id: "5", role: 'Snr. Project Manager', count: 0},
+    {id: "6", role: 'Associate Project Manager', count: 0},
+    {id: "7", role: 'Consultant', count: 0},
+
+]
+
 export default function Form() {
     // state that stores data from each question
     // const [formAnswers, setFormAnswers] = useState(defaultValues)
@@ -55,57 +66,82 @@ export default function Form() {
     const [role, setRole] = useState("")
     const [purpose, setPurpose] = useState([])
     const [projects, setProjects] = useState(projectTiersInitialState)
-    // const [projects, setProjects] = useState({id: "1", range: '1-10M', count: 0})
-    // const [projects, setProjects] = useState(0)
-    const [staff, setStaff] = useState()
+    const [staff, setStaff] = useState(staffRolesInitialState)
 
-    // console.log(projects.count)
-
-    // WHAT I WANT
     function projectsCounter(rowName, rowProject) {
         return (
             <div>
                 <ButtonGroup>
-                    {/* {projects.map((item, index) => {
-                        return (
-                            <div>
-                                <Button variant="contained" onClick={() => countDecrease(rowName, item.count)}>-</Button>
-                                <p>Count: {item.count}, Value: {rowName}</p>
-                                <Button onClick={() => countIncrease(rowName, item.count)}>+</Button>
-                            </div>
-                        )
-                    })} */}
                     <Button variant="contained" onClick={() => countDecrease(rowName, rowProject)} onChange={handleInputChange} name="projects">-</Button>
-                    <h3>Count: {rowProject}</h3>
+                        <h3>Count: {rowProject}</h3>
                     <Button variant="contained" onClick={() => countIncrease(rowName, rowProject)} onChange={handleInputChange} name="projects">+</Button>
                 </ButtonGroup>
             </div>
         )
     }
 
+    function staffCounter(role, staffCount) {
+        return (
+            <div>
+                <ButtonGroup>
+                    <Button variant="contained" onClick={() => decreaseStaffCount(role, staffCount)} onChange={handleInputChange} name="staff">-</Button>
+                        <h3>Count: {staffCount}</h3>
+                    <Button variant="contained" onClick={() => increaseStaffCount(role, staffCount)} onChange={handleInputChange} name="staff">+</Button>
+                </ButtonGroup>
+            </div>
+        )
+    }
+
+    // increase project count
     function countIncrease(rowName, rowProject) {
         // UPDATES OBJECTS INDIVIDUALLY - VICTORY!
-        const newData = projects.map((item) => {
-            if (item.range === rowName && item.count >= 0) {
-                item.count += 1
+        const newData = projects.map((project) => {
+            if (project.range === rowName && project.count >= 0) {
+                project.count += 1
             }
-            return item;
+            return project;
         })
         setProjects(newData)
         console.log('increase', rowName, rowProject)
     }
 
+    // decrease project count
     function countDecrease(rowName, rowProject) {
-        const newData = projects.map((item) => {
-            if (item.range === rowName && item.count > 0) {
-                item.count -= 1
+        const newData = projects.map((project) => {
+            if (project.range === rowName && project.count > 0) {
+                project.count -= 1
             }
-            return item;
+            return project;
         })
         setProjects(newData)
         console.log('decrease', rowName, rowProject)
     }
 
+    // increase staff counter
+    function increaseStaffCount(role, staffCount) {
+        const staffData = staff.map((item) => {
+            if (item.role === role) {
+                item.count += 1
+            }
+            return item;
+        })
+        setStaff(staffData)
+        console.log('increase', role, staffCount)
+    }
+
+    // decrease staff counter
+    function decreaseStaffCount(role, staffCount) {
+        const staffData = staff.map((item) => {
+            if (item.role === role && item.count > 0) {
+                item.count -= 1
+            }
+            return item;
+        })
+        setStaff(staffData)
+        console.log('decrease', role, staffCount)
+
+    }
+    
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         console.log(name, value)
@@ -127,8 +163,11 @@ export default function Form() {
                 setPurpose([...purpose, value])
                 break
             case "projects":
-                // enable later
                 setProjects([...projects, value])
+                break
+            case "staff":
+                // add in soon
+                setStaff([...staff, value])
             default:
                 break
         }
@@ -140,11 +179,11 @@ export default function Form() {
         console.log(region, role, purpose, projects)
     }
 
-    function createData(name, projects) {
-        return { name, projects };
+    function createData(name, count) {
+        return { name, count };
       }
-
-    // Populate data for projects + value
+    
+    // Populates data for value + project count
     const projectRows = [
         // HOW CAN I MAKE THIS MORE DRY? - forEach? Map?
         createData(projects[0].range, projects[0].count),
@@ -160,17 +199,16 @@ export default function Form() {
         createData(projects[10].range, projects[10].count),
     ];
 
-
     // Populate data for staff
     const staffRows = [
         // map over, forEach, etc. // make more DRY
-        createData('Project Manager', 20),
-        createData('Project Director', 5),
-        createData('Program Manager', 9),
-        createData('Portfolio Manager', 4),
-        createData('Snr. Project Manager', 2),
-        createData('Associate Project Manager', 8),
-        createData('Consultant', 5)
+        createData(staff[0].role, staff[0].count),
+        createData(staff[1].role, staff[1].count),
+        createData(staff[2].role, staff[2].count),
+        createData(staff[3].role, staff[3].count),
+        createData(staff[4].role, staff[4].count),
+        createData(staff[5].role, staff[5].count),
+        createData(staff[6].role, staff[6].count)
     ];
 
     return (
@@ -236,7 +274,7 @@ export default function Form() {
                                 key={ row.name } sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     <TableCell component="th" scope="row">{ row.name }</TableCell>
                                     {/* { row.projects }  default */} 
-                                    <TableCell> {projectsCounter(row.name, row.projects)} </TableCell> 
+                                    <TableCell> {projectsCounter(row.name, row.count)} </TableCell> 
                                 </TableRow>
                             ))}
                             </TableBody>
@@ -244,10 +282,9 @@ export default function Form() {
                     </TableContainer>
                 </Grid>
                 <Grid item>
-
                     {/* Question 5 - Staff Table */}
                     <h3>Question 5: How many staff members do you employ?</h3>
-                    <TableContainer sx={{ width: 500 }} component={Paper}>
+                    <TableContainer sx={{ width: 600 }} component={Paper}>
                         <Table sx={{ minWidth: 650 }} aria-label="simple table">
                             <TableHead>
                                 <TableRow>
@@ -261,13 +298,14 @@ export default function Form() {
                                 key={ row.name } sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                     <TableCell component="th" scope="row">{ row.name }</TableCell>
                                     {/* { row.projects }  default */} 
-                                    <TableCell> {row.projects} </TableCell> 
+                                    <TableCell> {staffCounter(row.name, row.count)} </TableCell> 
                                 </TableRow>
                             ))}
                             </TableBody>
                         </Table>
                     </TableContainer>
                 </Grid>
+                {/* Submit button */}
                 <Button sx={{ width: 80, marginTop: 1 }} variant="contained" type="submit" className="submit-btn">Submit</Button>
             {/* <Grid/> */}
         </form>
