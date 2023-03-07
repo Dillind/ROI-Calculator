@@ -75,9 +75,9 @@ export default function Form() {
                             </div>
                         )
                     })} */}
-                    <Button variant="contained" onClick={() => countDecrease(rowName, rowProject)} name="projects">-</Button>
+                    <Button variant="contained" onClick={() => countDecrease(rowName, rowProject)} onChange={handleInputChange} name="projects">-</Button>
                     <h3>Count: {rowProject}</h3>
-                    <Button variant="contained" onClick={() => countIncrease(rowName, rowProject)} name="projects">+</Button>
+                    <Button variant="contained" onClick={() => countIncrease(rowName, rowProject)} onChange={handleInputChange} name="projects">+</Button>
                 </ButtonGroup>
             </div>
         )
@@ -128,7 +128,7 @@ export default function Form() {
                 break
             case "projects":
                 // enable later
-                // setProjects([...projects, value])
+                setProjects([...projects, value])
             default:
                 break
         }
