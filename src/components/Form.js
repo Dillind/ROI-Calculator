@@ -56,7 +56,12 @@ export default function Form() {
     const [purpose, setPurpose] = useState([])
     const [projects, setProjects] = useState(projectTiersInitialState)
     const [staff, setStaff] = useState(staffRolesInitialState)
-    const [isInProgress, setIsInProgress] = useState(true)
+    const [isInProgress, setIsInProgress] = useState(true) 
+    const [validation, setValidation] = useState(false)
+
+    const projectHoursSavedPerMonth = 20
+    const programHoursSavedPerMonth = 15
+    const portfolioHoursSavedPerMonth = 10
 
     function projectsCounter(value, projectCount) {
         return (
@@ -204,6 +209,8 @@ export default function Form() {
         createData(staff[6].role, staff[6].count)
     ];
 
+
+
     // renders the ROI calculator form
     function renderForm() {
         return (
@@ -245,13 +252,16 @@ export default function Form() {
                         </Grid>
                         <Grid item>
                             <h3>Question 3: What do you want to use Mastt for?</h3>
-                            <FormGroup
-                                id="purpose-select"
-                                value={purpose}>
-                                    <FormControlLabel control={<Checkbox />} onChange={handleInputChange} name="purpose" value="project" label="Project" />
-                                    <FormControlLabel control={<Checkbox />} onChange={handleInputChange} name="purpose" value="program" label="Program"/>
-                                    <FormControlLabel control={<Checkbox />} onChange={handleInputChange} name="purpose" value="project/enterprise" label="Portfolio/Enterprise" />
-                            </FormGroup>
+                            <FormControl>
+                                <FormGroup
+                                    id="purpose-select"
+                                    value={purpose}
+                                    required={true}>
+                                        <FormControlLabel control={<Checkbox />} onChange={handleInputChange} name="purpose" value="project" label="Project" />
+                                        <FormControlLabel control={<Checkbox />} onChange={handleInputChange} name="purpose" value="program" label="Program"/>
+                                        <FormControlLabel control={<Checkbox />} onChange={handleInputChange} name="purpose" value="project/enterprise" label="Portfolio/Enterprise" />
+                                </FormGroup>
+                            </FormControl>
                         </Grid>
                         <Grid item>
                             {/* Question 4 - Total Projects + Value Table */}
@@ -300,7 +310,7 @@ export default function Form() {
                             </TableContainer>
                         </Grid>
                         {/* Submit button */}
-                        <Button size="medium" sx={{ width: 80, marginTop: 1 }} variant="contained" type="submit" className="submit-btn">Submit</Button>
+                        <Button size="medium" sx={{ width: 100, marginTop: 1 }} variant="contained" type="submit" className="submit-btn">CALCULATE</Button>
                     {/* <Grid/> */}
                 </form>
             </>
@@ -310,61 +320,94 @@ export default function Form() {
 
     // renders the 
 
-     // function that creates a row with desc, qty, unit and price
-    function createRow(desc, qty, unit) {
-        return { desc, qty, unit, };
+    // function that creates a row on description, total projects, total staff, time saved per month
+    function createRow(desc, projectQty, staffQty, timeSaved) {
+        return { desc, projectQty, staffQty, timeSaved };
+    }
+
+    // adds the total count of projects/staff together.
+    function calculateTotal(data) {
+        const total = data.reduce((total, project) => {
+            return total + project.count
+        }, 0)
+        return total;
+    }
+
+    function calculateTimeSaved(hours, numberOfStaff) {
+        return hours * numberOfStaff;
     }
 
     const rows = [
-        // createRow('title', opex, capex)
-        createRow('Project', 100, 1.15),
-        createRow('Program', 10, 45.99),
-        createRow('Portfolio/Enterprise', 2, 17.99),
-        // createRow() - creates an empty row
-        createRow('Grand Total', 5, 12.22)
+        // createRow('title', projects, staff, timeSaved)
+
+
+        createRow('Project', calculateTotal(projects), calculateTotal(staff), calculateTimeSaved(projectHoursSavedPerMonth, calculateTotal(staff))),
+
+
+        createRow('Program', 10, 50, 0),
+        createRow('Portfolio/Enterprise', 2, 60, 0),
+        createRow('Grand Total', 5, 120, 0)
     ];
+
+    // function that returns a number to two decimal places
+    function toDecimalPlace(num) {
+        return `${num.toFixed(0)}`;
+    }
 
     function renderTable() {
         return (
             <div>
+                <div>
+                    <h3>CALCULATE ROI DATA</h3>
+                </div>
                 <TableContainer component={Paper}>
                     <Table sx={{ minWidth: 700 }} aria-label="spanning table">
                         <TableHead>
                             <TableRow>
                                 <TableCell align="left" colSpan={3}>
-                                <h3>Role: {role}</h3>
+                                <h3>Role: {role} </h3>
                                 </TableCell>
                                 <TableCell align="right"/>
                             </TableRow>
                             <TableRow>
                                 <TableCell></TableCell>
-                                <TableCell align="right">Opex</TableCell>
-                                <TableCell align="right">Capex</TableCell>
-                                <TableCell align="right">Savings</TableCell>
+                                <TableCell align="center">Total Projects</TableCell>
+                                <TableCell align="center">Total Staff</TableCell>
+                                <TableCell align="center">Time Saved Per Month</TableCell>
+                                <TableCell align="center">Cost Saved Per Month</TableCell>
+                                <TableCell align="center">Quality Saved Per Month</TableCell>
                                 </TableRow>
                         </TableHead>
                         <TableBody>
                             {rows.map((row) => (
                             <TableRow key={row.desc}>
                                 <TableCell>{row.desc}</TableCell>
-                                <TableCell align="right">{row.qty}</TableCell>
-                                <TableCell align="right">{row.unit}</TableCell>
-                                <TableCell align="right">[Value]</TableCell>
+                                <TableCell align="center">{row.projectQty}</TableCell>
+                                <TableCell align="center">{row.staffQty}</TableCell>
+                                <TableCell align="center">{row.timeSaved} hrs</TableCell>
+                                <TableCell align="center"></TableCell>
+                                <TableCell align="center"></TableCell>
                             </TableRow>
                             ))}
                             {/* <TableRow>
-                                <TableCell rowSpan={3} />
-                                <TableCell colSpan={2}>Subtotal</TableCell>
-                                <TableCell align="right">{ccyFormat(invoiceSubtotal)}</TableCell>
+                                <TableCell>Project</TableCell>
+                                <TableCell align="center">{projects[0].count}</TableCell>
+                                <TableCell align="center">{staff[0].count}</TableCell>
+                                <TableCell align="center"></TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell>Projects</TableCell>
-                                <TableCell align="right">{checkNumber(collectData["projects"].value)}</TableCell>
+                                <TableCell rowSpan={3} />
+                                <TableCell colSpan={2}>Subtotal</TableCell>
                                 <TableCell align="right"></TableCell>
                             </TableRow>
                             <TableRow>
-                                <TableCell colSpan={2}>Total</TableCell>
-                                <TableCell align="right">{ccyFormat(invoiceTotal)}</TableCell>
+                                <TableCell>Projects</TableCell>
+                                <TableCell align="right"></TableCell>
+                                <TableCell align="right"></TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Total</TableCell>
+                                <TableCell align="right"></TableCell>
                             </TableRow> */}
                         </TableBody>
                     </Table>
@@ -375,7 +418,8 @@ export default function Form() {
 
     return (
         <>
-        {isInProgress ? renderForm() : renderTable()}
+        {/* {isInProgress ? renderForm() : renderTable()} */}
+        {renderTable()}
         </>
        
     )
