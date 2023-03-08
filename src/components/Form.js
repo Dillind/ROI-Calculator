@@ -51,25 +51,20 @@ const staffRolesInitialState = [
 
 export default function Form() {
     // state that stores data from each question
-    const [region, setRegion] = useState("")
-    const [role, setRole] = useState("")
-    const [purpose, setPurpose] = useState([])
-    const [projects, setProjects] = useState(projectTiersInitialState)
-    const [staff, setStaff] = useState(staffRolesInitialState)
-    const [isInProgress, setIsInProgress] = useState(true) 
-    const [validation, setValidation] = useState(false)
-
-    const projectHoursSavedPerMonth = 20
-    const programHoursSavedPerMonth = 15
-    const portfolioHoursSavedPerMonth = 10
+    const [region, setRegion] = useState("");
+    const [role, setRole] = useState("");
+    const [purpose, setPurpose] = useState([]);
+    const [projects, setProjects] = useState(projectTiersInitialState);
+    const [staff, setStaff] = useState(staffRolesInitialState);
+    const [isInProgress, setIsInProgress] = useState(true);
 
     function projectsCounter(value, projectCount) {
         return (
             <div>
                 <ButtonGroup>
-                    <Button variant="contained" onClick={() => countDecrease(value, projectCount)} onChange={handleInputChange} name="projects">-</Button>
+                    <Button sx={{ margin: 2 }} variant="contained" onClick={() => countDecrease(value, projectCount)} onChange={handleInputChange} name="projects">-</Button>
                         <h3>Count: {projectCount}</h3>
-                    <Button variant="contained" onClick={() => countIncrease(value, projectCount)} onChange={handleInputChange} name="projects">+</Button>
+                    <Button sx={{ margin: 2 }} variant="contained" onClick={() => countIncrease(value, projectCount)} onChange={handleInputChange} name="projects">+</Button>
                 </ButtonGroup>
             </div>
         )
@@ -79,9 +74,9 @@ export default function Form() {
         return (
             <div>
                 <ButtonGroup>
-                    <Button variant="contained" onClick={() => decreaseStaffCount(role, staffCount)} onChange={handleInputChange} name="staff">-</Button>
+                    <Button sx={{ margin: 2 }} variant="contained" onClick={() => decreaseStaffCount(role, staffCount)} onChange={handleInputChange} name="staff">-</Button>
                         <h3>Count: {staffCount}</h3>
-                    <Button variant="contained" onClick={() => increaseStaffCount(role, staffCount)} onChange={handleInputChange} name="staff">+</Button>
+                    <Button sx={{ margin: 2 }} variant="contained" onClick={() => increaseStaffCount(role, staffCount)} onChange={handleInputChange} name="staff">+</Button>
                 </ButtonGroup>
             </div>
         )
@@ -209,8 +204,6 @@ export default function Form() {
         createData(staff[6].role, staff[6].count)
     ];
 
-
-
     // renders the ROI calculator form
     function renderForm() {
         return (
@@ -218,6 +211,7 @@ export default function Form() {
                 <form onSubmit={handleSubmit}>
                     <Grid container alignItems="center" justify="center" direction="column"/>
                         <Grid item>
+                            {/* Question 1 - User selects their region (which helps calculate their internal $ rates) */}
                             <h3>Question 1: Please Select Your Region</h3>
                             <FormControl sx={{ width: 200 }}>
                                 <InputLabel id="region-select-label">Region</InputLabel>
@@ -227,15 +221,16 @@ export default function Form() {
                                 value={region}
                                 label="Region"
                                 onChange={handleInputChange}>
-                                    <MenuItem value="americas" label="Americas">Americas</MenuItem>
-                                    <MenuItem value="asia pacific" label="Asia Pacific">Asia Pacific</MenuItem>
-                                    <MenuItem value="europe" label="Europe">Europe</MenuItem>
-                                    <MenuItem value="middle east" label="Middle East">Middle East</MenuItem>
-                                    <MenuItem value="africa" label="Africa">Africa</MenuItem>
+                                    <MenuItem value="Americas" label="Americas">Americas</MenuItem>
+                                    <MenuItem value="Asia Pacific" label="Asia Pacific">Asia Pacific</MenuItem>
+                                    <MenuItem value="Europe" label="Europe">Europe</MenuItem>
+                                    <MenuItem value="Middle East" label="Middle East">Middle East</MenuItem>
+                                    <MenuItem value="Africa" label="Africa">Africa</MenuItem>
                                 </Select>
                             </FormControl>
                         </Grid>
                         <Grid item>
+                            {/* Question 2 - User selects whether they are a PMC or AO */}
                             <h3>Question 2: Are you a Consultant or Asset Owner?</h3>
                             <FormControl>
                                 <FormLabel>Role</FormLabel>
@@ -251,27 +246,29 @@ export default function Form() {
                             </FormControl> 
                         </Grid>
                         <Grid item>
+                            {/* Question 3 - User selects if they want to use projects, programs or a portfolio */}
                             <h3>Question 3: What do you want to use Mastt for?</h3>
+                            <p>You can select more than one option.</p>
                             <FormControl>
                                 <FormGroup
                                     id="purpose-select"
                                     value={purpose}
                                     required={true}>
-                                        <FormControlLabel control={<Checkbox />} onChange={handleInputChange} name="purpose" value="project" label="Project" />
-                                        <FormControlLabel control={<Checkbox />} onChange={handleInputChange} name="purpose" value="program" label="Program"/>
-                                        <FormControlLabel control={<Checkbox />} onChange={handleInputChange} name="purpose" value="project/enterprise" label="Portfolio/Enterprise" />
+                                        <FormControlLabel control={<Checkbox />} onChange={handleInputChange} name="purpose" value="Project" label="Project" />
+                                        <FormControlLabel control={<Checkbox />} onChange={handleInputChange} name="purpose" value="Program" label="Program"/>
+                                        <FormControlLabel control={<Checkbox />} onChange={handleInputChange} name="purpose" value="Portfolio/Enterprise" label="Portfolio/Enterprise" />
                                 </FormGroup>
                             </FormControl>
                         </Grid>
                         <Grid item>
-                            {/* Question 4 - Total Projects + Value Table */}
+                            {/* Question 4 - User selects how many projects they want for each valuation */}
                             <h3>Question 4: How many projects do you have in total and what is the assigned value for each project?</h3>
-                            <TableContainer sx={{ width: 500 }} component={Paper}>
+                            <TableContainer sx={{ width: 600 }} component={Paper}>
                                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                                     <TableHead>
                                         <TableRow>
                                             <TableCell>Value ($)</TableCell>
-                                            <TableCell>Projects</TableCell>
+                                            <TableCell align="center">Projects</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -279,7 +276,7 @@ export default function Form() {
                                         <TableRow
                                         key={ row.name } sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                             <TableCell component="th" scope="row">{ row.name }</TableCell>
-                                            <TableCell> {projectsCounter(row.name, row.count)} </TableCell> 
+                                            <TableCell align="center"> {projectsCounter(row.name, row.count)} </TableCell> 
                                         </TableRow>
                                     ))}
                                     </TableBody>
@@ -287,7 +284,7 @@ export default function Form() {
                             </TableContainer>
                         </Grid>
                         <Grid item>
-                            {/* Question 5 - Staff Table */}
+                            {/* Question 5 - User selects how many staff members they have employed for each role */}
                             <h3>Question 5: How many staff members do you employ?</h3>
                             <TableContainer sx={{ width: 600 }} component={Paper}>
                                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -309,56 +306,76 @@ export default function Form() {
                                 </Table>
                             </TableContainer>
                         </Grid>
-                        {/* Submit button */}
+                        {/* Submit button to gather all the data */}
                         <Button size="medium" sx={{ width: 100, marginTop: 1 }} variant="contained" type="submit" className="submit-btn">CALCULATE</Button>
-                    {/* <Grid/> */}
+                    {/* </Grid> */}
                 </form>
             </>
 
         )
     }
+    
+    // how to calculate?
+    const projectHoursSavedPerMonth = 20
+    const programHoursSavedPerMonth = 15
+    const portfolioHoursSavedPerMonth = 10
 
-    // renders the 
+    // cost saved per month?
+    const projectCostSavedPerMonth = 1000
+    // quality saved per month?
 
     // function that creates a row on description, total projects, total staff, time saved per month
-    function createRow(desc, projectQty, staffQty, timeSaved) {
-        return { desc, projectQty, staffQty, timeSaved };
+    function createRow(desc, projectQty, staffQty, timeSaved, costSaved) {
+        return { desc, projectQty, staffQty, timeSaved, costSaved };
     }
 
     // adds the total count of projects/staff together.
     function calculateTotal(data) {
-        const total = data.reduce((total, project) => {
-            return total + project.count
+        const total = data.reduce((total, item) => {
+            return total + item.count
         }, 0)
         return total;
     }
 
+    // calculates the time saved for the project/program/portfolio
     function calculateTimeSaved(hours, numberOfStaff) {
         return hours * numberOfStaff;
     }
 
+    function calculateCostSaved(hours, staffRate) {};
+
+    function calculateQualitySaved() {
+
+    };
+    
+    // Populates the ROI table (time, cost, quality savings)
     const rows = [
-        // createRow('title', projects, staff, timeSaved)
-
-
+        // createRow('title', totalProjects, totalStaff, timeSaved, costSaved)
         createRow('Project', calculateTotal(projects), calculateTotal(staff), calculateTimeSaved(projectHoursSavedPerMonth, calculateTotal(staff))),
 
+        createRow('Program', calculateTotal(projects), calculateTotal(staff), calculateTimeSaved(programHoursSavedPerMonth, calculateTotal(staff))),
 
-        createRow('Program', 10, 50, 0),
-        createRow('Portfolio/Enterprise', 2, 60, 0),
-        createRow('Grand Total', 5, 120, 0)
+        createRow('Portfolio/Enterprise', calculateTotal(projects), calculateTotal(staff), calculateTimeSaved(portfolioHoursSavedPerMonth, calculateTotal(staff))),
+
+        createRow('Grand Total', "[placeholder]", "[placeholder]", "[placeholder]")
     ];
 
-    // function that returns a number to two decimal places
-    function toDecimalPlace(num) {
-        return `${num.toFixed(0)}`;
-    }
+    // // function that returns a number to two decimal places
+    // function toDecimalPlace(num) {
+    //     return `${num.toFixed(0)}`;
+    // }
 
     function renderTable() {
         return (
             <div>
                 <div>
                     <h3>CALCULATE ROI DATA</h3>
+                    <p>Hours saved per staff member</p>
+                    <ul>
+                        <li>Project: {projectHoursSavedPerMonth} hours</li>
+                        <li>Program: {programHoursSavedPerMonth} hours</li>
+                        <li>Portfolio/Enterprise: {portfolioHoursSavedPerMonth} hours</li>
+                    </ul>
                 </div>
                 <TableContainer component={Paper}>
                     <Table sx={{ minWidth: 700 }} aria-label="spanning table">
@@ -366,7 +383,12 @@ export default function Form() {
                             <TableRow>
                                 <TableCell align="left" colSpan={3}>
                                 <h3>Role: {role} </h3>
+                                <h3>Region: {region}</h3>
+                                <h3>Purpose: {purpose} </h3>
                                 </TableCell>
+                                {/* Adjusts table row line */}
+                                <TableCell align="right"/>
+                                <TableCell align="right"/>
                                 <TableCell align="right"/>
                             </TableRow>
                             <TableRow>
@@ -385,30 +407,10 @@ export default function Form() {
                                 <TableCell align="center">{row.projectQty}</TableCell>
                                 <TableCell align="center">{row.staffQty}</TableCell>
                                 <TableCell align="center">{row.timeSaved} hrs</TableCell>
-                                <TableCell align="center"></TableCell>
+                                <TableCell align="center">{row.costSaved}</TableCell>
                                 <TableCell align="center"></TableCell>
                             </TableRow>
                             ))}
-                            {/* <TableRow>
-                                <TableCell>Project</TableCell>
-                                <TableCell align="center">{projects[0].count}</TableCell>
-                                <TableCell align="center">{staff[0].count}</TableCell>
-                                <TableCell align="center"></TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell rowSpan={3} />
-                                <TableCell colSpan={2}>Subtotal</TableCell>
-                                <TableCell align="right"></TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell>Projects</TableCell>
-                                <TableCell align="right"></TableCell>
-                                <TableCell align="right"></TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell>Total</TableCell>
-                                <TableCell align="right"></TableCell>
-                            </TableRow> */}
                         </TableBody>
                     </Table>
                 </TableContainer>
@@ -418,8 +420,8 @@ export default function Form() {
 
     return (
         <>
-        {/* {isInProgress ? renderForm() : renderTable()} */}
-        {renderTable()}
+        {isInProgress ? renderForm() : renderTable()}
+        {/* {renderTable()} */}
         </>
        
     )
