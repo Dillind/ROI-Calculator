@@ -21,8 +21,9 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-// import RenderTable from '../components/TableForm.js'
+import Typography from '@mui/material/Typography';
 import "../index.css"
+
 
 const projectTiersInitialState = [
     // what if the scope increased? how would you account for that? as it is currently just looping over and checking each, when it could go straight to a key (i.e. range) and improve time + space complexity.
@@ -62,9 +63,9 @@ export default function Form() {
         return (
             <div>
                 <ButtonGroup>
-                    <Button sx={{ margin: 2 }} variant="contained" onClick={() => countDecrease(value, projectCount)} onChange={handleInputChange} name="projects">-</Button>
-                        <h3>Count: {projectCount}</h3>
-                    <Button sx={{ margin: 2 }} variant="contained" onClick={() => countIncrease(value, projectCount)} onChange={handleInputChange} name="projects">+</Button>
+                    <Button sx={{ margin: 2 }} variant="contained" onClick={() => decreaseProjectCount(value, projectCount)} onChange={handleInputChange} name="projects">-</Button>
+                        <p className="counter">{projectCount}</p>
+                    <Button sx={ {margin: 2 }} variant="contained" onClick={() => increaseProjectCount(value, projectCount)} onChange={handleInputChange} name="projects">+</Button>
                 </ButtonGroup>
             </div>
         )
@@ -75,7 +76,7 @@ export default function Form() {
             <div>
                 <ButtonGroup>
                     <Button sx={{ margin: 2 }} variant="contained" onClick={() => decreaseStaffCount(role, staffCount)} onChange={handleInputChange} name="staff">-</Button>
-                        <h3>Count: {staffCount}</h3>
+                        <p className="counter"> {staffCount} </p>
                     <Button sx={{ margin: 2 }} variant="contained" onClick={() => increaseStaffCount(role, staffCount)} onChange={handleInputChange} name="staff">+</Button>
                 </ButtonGroup>
             </div>
@@ -83,7 +84,7 @@ export default function Form() {
     }
 
     // increase project count
-    function countIncrease(value, projectCount) {
+    function increaseProjectCount(value, projectCount) {
         const newData = projects.map((project) => {
             if (project.range === value && project.count >= 0) {
                 project.count += 1
@@ -95,7 +96,7 @@ export default function Form() {
     }
 
     // decrease project count
-    function countDecrease(value, projectCount) {
+    function decreaseProjectCount(value, projectCount) {
         const newData = projects.map((project) => {
             if (project.range === value && project.count > 0) {
                 project.count -= 1
@@ -128,7 +129,6 @@ export default function Form() {
         })
         setStaff(staffData)
         console.log('decrease', role, staffCount)
-
     }
     
     const handleInputChange = (e) => {
@@ -148,7 +148,6 @@ export default function Form() {
                 setRole(value)
                 break
             case "purpose":
-                // allows for multiple clicks, which then renders and adds to the array multiple times.s
                 setPurpose([...purpose, value])
                 break
             case "projects":
@@ -194,7 +193,7 @@ export default function Form() {
 
     // Populates data for staff
     const staffRows = [
-        // map over, forEach, etc. // make more DRY
+        // map over, forEach, etc. - make more DRY
         createData(staff[0].role, staff[0].count),
         createData(staff[1].role, staff[1].count),
         createData(staff[2].role, staff[2].count),
@@ -229,6 +228,14 @@ export default function Form() {
                                 </Select>
                             </FormControl>
                         </Grid>
+                        <div className='live-data-container'>
+                            <div className='data-properties'>
+                                {/* <ThemeProvider theme={theme}> */}
+                                    <Typography variant="h2" align="center">Savings</Typography>
+                                    <Typography variant="h1" align="center">${totalCostSaved}</Typography>
+                                {/* </ThemeProvider> */}
+                            </div>
+                        </div>
                         <Grid item>
                             {/* Question 2 - User selects whether they are a PMC or AO */}
                             <h3>Question 2: Are you a Consultant or Asset Owner?</h3>
@@ -299,7 +306,7 @@ export default function Form() {
                                         <TableRow
                                         key={ row.name } sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                             <TableCell component="th" scope="row">{ row.name }</TableCell>
-                                            <TableCell> {staffCounter(row.name, row.count)} </TableCell> 
+                                            <TableCell align="left"> {staffCounter(row.name, row.count)} </TableCell> 
                                         </TableRow>
                                     ))}
                                     </TableBody>
@@ -311,7 +318,6 @@ export default function Form() {
                     {/* </Grid> */}
                 </form>
             </>
-
         )
     }
     
@@ -319,15 +325,8 @@ export default function Form() {
     const projectHoursSavedPerMonth = 20
     const programHoursSavedPerMonth = 15
     const portfolioHoursSavedPerMonth = 10
-
-    // cost saved per month?
-    const projectCostSavedPerMonth = 1000
-    // quality saved per month?
-
-    // function that creates a row on description, total projects, total staff, time saved per month
-    function createRow(desc, projectQty, staffQty, timeSaved, costSaved) {
-        return { desc, projectQty, staffQty, timeSaved, costSaved };
-    }
+    const totalPPPHours = projectHoursSavedPerMonth + programHoursSavedPerMonth + portfolioHoursSavedPerMonth;
+    const rate = 50
 
     // adds the total count of projects/staff together.
     function calculateTotal(data) {
@@ -338,32 +337,52 @@ export default function Form() {
     }
 
     // calculates the time saved for the project/program/portfolio
-    function calculateTimeSaved(hours, numberOfStaff) {
-        return hours * numberOfStaff;
+    function timeSaved(hoursSavedMonthly, numberOfStaff) {
+        return hoursSavedMonthly * numberOfStaff;
     }
 
-    function calculateCostSaved(hours, staffRate) {};
-
-    function calculateQualitySaved() {
-
+    function costSaved(timeSaved, staffRate) {
+        return timeSaved * staffRate;
     };
-    
+
+    // rolls up all the cost saved values from project, program and portfolio into a single variable
+    const totalCostSaved = costSaved(timeSaved(projectHoursSavedPerMonth, calculateTotal(staff)), rate) + costSaved(timeSaved(programHoursSavedPerMonth, calculateTotal(staff)), rate) + costSaved(timeSaved(portfolioHoursSavedPerMonth, calculateTotal(staff)), rate)
+
+
+    // function that creates a row on description, total projects, total staff, time saved per month
+    function createRow(desc, projectQty, staffQty, timeSaved, costSaved, qualitySaved) {
+        return { desc, projectQty, staffQty, timeSaved, costSaved, qualitySaved };
+    }
+
+    // const [projectTime, setProjectTime] = useState(0)
+
+
     // Populates the ROI table (time, cost, quality savings)
-    const rows = [
-        // createRow('title', totalProjects, totalStaff, timeSaved, costSaved)
-        createRow('Project', calculateTotal(projects), calculateTotal(staff), calculateTimeSaved(projectHoursSavedPerMonth, calculateTotal(staff))),
+    const rows = [ 
+        // createRow('title', totalProjects, totalStaff, timeSaved, costSaved, qualitySaved)
+        createRow('Project', 
+        calculateTotal(projects),
+        calculateTotal(staff),
+        timeSaved(projectHoursSavedPerMonth,
+        calculateTotal(staff)), 
+        costSaved(timeSaved(projectHoursSavedPerMonth, calculateTotal(staff)), rate), 0),
 
-        createRow('Program', calculateTotal(projects), calculateTotal(staff), calculateTimeSaved(programHoursSavedPerMonth, calculateTotal(staff))),
+        createRow('Program',
+        calculateTotal(projects),
+        calculateTotal(staff),
+        timeSaved(programHoursSavedPerMonth,
+        calculateTotal(staff)), 
+        costSaved(timeSaved(programHoursSavedPerMonth, calculateTotal(staff)), rate), 0),
 
-        createRow('Portfolio/Enterprise', calculateTotal(projects), calculateTotal(staff), calculateTimeSaved(portfolioHoursSavedPerMonth, calculateTotal(staff))),
+        createRow('Portfolio/Enterprise',
+        calculateTotal(projects),
+        calculateTotal(staff),
+        timeSaved(portfolioHoursSavedPerMonth,
+        calculateTotal(staff)), 
+        costSaved(timeSaved(portfolioHoursSavedPerMonth, calculateTotal(staff)), rate), 0),
 
-        createRow('Grand Total', "[placeholder]", "[placeholder]", "[placeholder]")
+        createRow('Grand Total', 0, 0, 0, totalCostSaved, 0)
     ];
-
-    // // function that returns a number to two decimal places
-    // function toDecimalPlace(num) {
-    //     return `${num.toFixed(0)}`;
-    // }
 
     function renderTable() {
         return (
@@ -384,7 +403,6 @@ export default function Form() {
                                 <TableCell align="left" colSpan={3}>
                                 <h3>Role: {role} </h3>
                                 <h3>Region: {region}</h3>
-                                <h3>Purpose: {purpose} </h3>
                                 </TableCell>
                                 {/* Adjusts table row line */}
                                 <TableCell align="right"/>
@@ -407,8 +425,8 @@ export default function Form() {
                                 <TableCell align="center">{row.projectQty}</TableCell>
                                 <TableCell align="center">{row.staffQty}</TableCell>
                                 <TableCell align="center">{row.timeSaved} hrs</TableCell>
-                                <TableCell align="center">{row.costSaved}</TableCell>
-                                <TableCell align="center"></TableCell>
+                                <TableCell align="center">${row.costSaved}</TableCell>
+                                <TableCell align="center">{row.qualitySaved}</TableCell>
                             </TableRow>
                             ))}
                         </TableBody>
@@ -420,9 +438,14 @@ export default function Form() {
 
     return (
         <>
-        {isInProgress ? renderForm() : renderTable()}
-        {/* {renderTable()} */}
+        {renderForm()}
+        {isInProgress ? null : renderTable()}
         </>
        
     )
 }
+
+    // // function that returns a number to two decimal places
+    // function toDecimalPlace(num) {
+    //     return `${num.toFixed(0)}`;
+    // }
